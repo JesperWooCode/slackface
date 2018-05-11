@@ -71,6 +71,7 @@ RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
 EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
+
 last_event = None
 def parse_bot_commands(slack_events):
     """
@@ -80,8 +81,12 @@ def parse_bot_commands(slack_events):
     """
     for event in slack_events:
         print(event["type"])
-        print(event)
-        if event["type"] == "message" and event["subtype"] == "file_share":
+        print(event) 
+        
+        if not "type" in event or not "subtype" in event:
+            continue
+
+        if  event["type"] == "message" and event["subtype"] == "file_share":
             if event["user"] == starterbot_id:
                 continue
 
