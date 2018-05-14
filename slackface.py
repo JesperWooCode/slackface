@@ -34,6 +34,8 @@ def makeupify(image):
     image = resize_image(image, 2)
 
     # Find all facial features in all the faces in the image
+    if not image.mode == 'RGB':
+        image = image.convert('RGB')
     face_landmarks_list = face_recognition.face_landmarks(np.array(image))
     
     if not face_landmarks_list:
