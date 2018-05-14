@@ -121,7 +121,6 @@ def makeupify(image):
     image = resize_image(image, 0.5)
     bytes = BytesIO()
     image.save(bytes, 'JPEG')
-    image.save("temp.JPEG", 'JPEG')
     bytes.seek(0)
     return bytes
 
