@@ -62,7 +62,20 @@ def addgoatee(d, face_landmarks):
     arr.append((mx, my-dx))
 
     d.polygon(arr, fill=(0, 0, 0, 200))
-    
+
+def lipstickcolor():
+    rnd = randint(0,4)
+    if rnd==0: # red
+        return (150, 0, 0, 128)
+    elif rnd==1: # purple
+        return (128, 0, 128, 128) 
+    elif rnd==2: # blue
+        return (0, 0, 150, 128)
+    elif rnd==3: # black
+        return (10, 10, 10, 128)
+    elif rnd==4: # green
+        return (0, 150, 0, 128)
+
 
 def makeupify(image):
     image = resize_image(image, 2)
@@ -86,10 +99,11 @@ def makeupify(image):
             addthickeyebrows(d, face_landmarks)
         
         # Gloss the lips
-        d.polygon(face_landmarks['top_lip'], fill=(150, 0, 0, 128))
-        d.polygon(face_landmarks['bottom_lip'], fill=(150, 0, 0, 128))
-        d.line(face_landmarks['top_lip'], fill=(150, 0, 0, 64), width=1)
-        d.line(face_landmarks['bottom_lip'], fill=(150, 0, 0, 64), width=1)
+        clr=lipstickcolor()
+        d.polygon(face_landmarks['top_lip'], fill=clr)
+        d.polygon(face_landmarks['bottom_lip'], fill=clr)
+        d.line(face_landmarks['top_lip'], fill=clr, width=1)
+        d.line(face_landmarks['bottom_lip'], fill=clr, width=1)
 
         # Sparkle the eyes
         d.polygon(face_landmarks['left_eye'], fill=(255, 255, 255, 30))
