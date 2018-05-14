@@ -10,6 +10,7 @@ import face_recognition
 import numpy as np
 from io import BytesIO
 from operator import itemgetter
+from random import *
 
 
 def resize_image(image, ratio):
@@ -30,6 +31,37 @@ def niceeyebrow(arr):
     last=extrapolate(fx, fy, lx, ly, maxx) #extrapolate(lx, ly, fx, fy,maxx)    
     return [first, last]
 
+def eyebrowheight(arr):
+    maxx = max(arr, key=itemgetter(1))[1]
+    minx = min(arr, key=itemgetter(1))[1]
+    return maxx-minx
+
+
+def addthickeyebrows(d, face_landmarks):
+    eyel = niceeyebrow(face_landmarks['left_eyebrow'])
+    eyer = niceeyebrow(face_landmarks['right_eyebrow'])
+    eyehr = eyebrowheight(face_landmarks['left_eyebrow'])
+    eyehl = eyebrowheight(face_landmarks['left_eyebrow'])
+
+    d.line(eyel, fill=(0, 0, 0, 255), width=eyehl)
+    d.line(eyer, fill=(0, 0, 0, 255), width=eyehr)
+
+def addprettyeyebrows(d, face_landmarks):
+    d.line(face_landmarks['left_eyebrow'], fill=(68, 54, 39, 150), width=8)
+    d.line(face_landmarks['right_eyebrow'], fill=(68, 54, 39, 150), width=8)
+
+def addgoatee(d, face_landmarks):
+    arr = face_landmarks['chin'][7:10]
+        
+    (lx, ly) = arr[0]
+    (mx, my) = arr[1]
+    (rx, ry) = arr[2]
+    dx = lx-rx
+    arr.append((mx, my-dx))
+
+    d.polygon(arr, fill=(0, 0, 0, 200))
+    
+
 def makeupify(image):
     image = resize_image(image, 2)
 
@@ -45,11 +77,12 @@ def makeupify(image):
         d = ImageDraw.Draw(image, 'RGBA')
 
         # Make the eyebrows into a nightmare
-        # d.polygon(face_landmarks['left_eyebrow'], fill=(68, 54, 39, 128))
-        # d.polygon(face_landmarks['right_eyebrow'], fill=(68, 54, 39, 128))
-        d.line(face_landmarks['left_eyebrow'], fill=(68, 54, 39, 150), width=8)
-        d.line(face_landmarks['right_eyebrow'], fill=(68, 54, 39, 150), width=8)
-
+        rnd = random() 
+        if rnd > 0.6:
+            addprettyeyebrows(d, face_landmarks)
+        else:
+            addthickeyebrows(d, face_landmarks)
+        
         # Gloss the lips
         d.polygon(face_landmarks['top_lip'], fill=(150, 0, 0, 128))
         d.polygon(face_landmarks['bottom_lip'], fill=(150, 0, 0, 128))
@@ -64,10 +97,15 @@ def makeupify(image):
         d.line(face_landmarks['left_eye'] + [face_landmarks['left_eye'][0]], fill=(0, 0, 0, 110), width=4)
         d.line(face_landmarks['right_eye'] + [face_landmarks['right_eye'][0]], fill=(0, 0, 0, 110), width=4)
 
+        # Awesome goatee
+        if random() > 0.5:
+            addgoatee(d, face_landmarks)
+        
+
     image = resize_image(image, 0.5)
     bytes = BytesIO()
-    image.save(bytes, 'PNG')
     image.save(bytes, 'JPEG')
+    image.save("temp.JPEG", 'JPEG')
     bytes.seek(0)
     return bytes
 
