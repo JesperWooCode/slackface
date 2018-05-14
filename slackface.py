@@ -15,6 +15,8 @@ from random import *
 
 def resize_image(image, ratio):
     (h, w) = image.size
+    if h * w > 1000 * 1000:
+        return image
     return image.resize(((int)(h*ratio),(int)(w*ratio)), Image.ANTIALIAS)
 
 def extrapolate(x1, y1, x2, y2, newx):
