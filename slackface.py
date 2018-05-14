@@ -9,11 +9,26 @@ from PIL import Image, ImageDraw
 import face_recognition
 import numpy as np
 from io import BytesIO
+from operator import itemgetter
+
 
 def resize_image(image, ratio):
     (h, w) = image.size
     return image.resize(((int)(h*ratio),(int)(w*ratio)), Image.ANTIALIAS)
 
+def extrapolate(x1, y1, x2, y2, newx):
+    return (newx, y1+(newx-x1)/(x2-x1)*(y2-y1))
+    
+def niceeyebrow(arr):
+    maxx = max(arr, key=itemgetter(0))[0]
+    minx = min(arr, key=itemgetter(0))[0]
+
+    (fx, fy) = arr[-2]
+    (lx, ly) = arr[1]
+
+    first=extrapolate(fx, fy, lx, ly, minx)
+    last=extrapolate(fx, fy, lx, ly, maxx) #extrapolate(lx, ly, fx, fy,maxx)    
+    return [first, last]
 
 def makeupify(image):
     image = resize_image(image, 2)
