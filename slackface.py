@@ -169,8 +169,8 @@ def parse_events(slack_events):
             res = slack_client.api_call(
                 "files.upload",
                 channels=event["channel"],
-                file=(event["file"]["id"] + '.png', makeup, 'image/png'),
-                title="test upload"
+                file=(event["file"]["id"] + '.jpg', makeup, 'image/jpeg'),
+                title="Beautiful!"
             )
 
             if "ok" in res and not res["ok"]:
