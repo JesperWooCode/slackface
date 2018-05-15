@@ -11,7 +11,7 @@ import face_recognition
 import numpy as np
 from io import BytesIO
 from operator import itemgetter
-from random import *
+from random import randint, random
 
 
 def resize_image(image, ratio):
