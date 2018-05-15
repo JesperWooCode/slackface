@@ -13,6 +13,9 @@ from io import BytesIO
 from operator import itemgetter
 from random import randint, random
 
+SLACK_BOT_TOKEN = os.getenv('SLACK_BOT_TOKEN')
+if not SLACK_BOT_TOKEN:
+    exit()
 
 def resize_image(image, ratio):
     (h, w) = image.size
@@ -127,7 +130,7 @@ def makeupify(image):
 
 
 # instantiate Slack client
-slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+slack_client = SlackClient(SLACK_BOT_TOKEN)
 # bot's user ID in Slack: value is assigned after the bot starts up
 bot_id = None
 
@@ -150,7 +153,7 @@ def parse_events(slack_events):
                 file=event["file"]["id"],
             )
             headers = {}
-            headers["Authorization"] = 'Bearer ' + os.environ.get('SLACK_BOT_TOKEN')
+            headers["Authorization"] = 'Bearer ' + SLACK_BOT_TOKEN
             response = requests.get(
                 file_info["file"]["url_private_download"],
                 headers=headers
