@@ -12,6 +12,8 @@ import numpy as np
 from io import BytesIO
 from operator import itemgetter
 from random import randint, random
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 SLACK_BOT_TOKEN = os.getenv('SLACK_BOT_TOKEN')
 if not SLACK_BOT_TOKEN:
