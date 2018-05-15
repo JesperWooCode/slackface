@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Install https://github.com/slackapi/python-slackclient
 # Install https://github.com/ageitgey/face_recognition
 
